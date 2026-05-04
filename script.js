@@ -1,5 +1,3 @@
-const inquiryForm = document.querySelector("#inquiry-form");
-const formNote = document.querySelector("#form-note");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
 const productFilm = document.querySelector("[data-product-film]");
@@ -307,39 +305,3 @@ productFilmFullscreen?.addEventListener("click", (event) => {
   const target = productFilmIframe || productFilm;
   target?.requestFullscreen?.();
 });
-
-if (inquiryForm) {
-  inquiryForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const data = new FormData(inquiryForm);
-    const name = data.get("name")?.toString().trim();
-    const email = data.get("email")?.toString().trim();
-    const zip = data.get("zip")?.toString().trim();
-    const preference = data.get("preference")?.toString().trim();
-    const message = data.get("message")?.toString().trim();
-
-    const subject = "Jabohouse reservation inquiry";
-    const body = [
-      "Reservation inquiry for Red Jaboticaba in Blue Ceramic",
-      "",
-      `Full name: ${name}`,
-      `Email address: ${email}`,
-      `Delivery ZIP code: ${zip}`,
-      `Pickup or delivery preference: ${preference}`,
-      "",
-      "Message:",
-      message,
-    ].join("\n");
-
-    // Backend integration note:
-    // Replace this mailto fallback with a Cloudflare Pages Function or form service
-    // that sends the same fields to troy@JaboHouse.com.
-    window.location.href = `mailto:troy@JaboHouse.com?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-
-    formNote.textContent =
-      "Your email app should open with the inquiry details. Please send the draft to complete your request.";
-  });
-}
