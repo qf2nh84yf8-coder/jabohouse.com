@@ -4,6 +4,57 @@ const productFilm = document.querySelector("[data-product-film]");
 const productFilmIframe = document.querySelector("[data-product-film-iframe]");
 const productFilmToggle = document.querySelector("[data-product-film-toggle]");
 const productFilmFullscreen = document.querySelector("[data-product-film-fullscreen]");
+const ambienceAudio = document.querySelector("[data-ambience-audio]");
+const ambienceToggle = document.querySelector("[data-audio-toggle]");
+const ambienceLabel = document.querySelector("[data-audio-label]");
+
+function setAmbienceButton(isAudible) {
+  if (!ambienceToggle || !ambienceLabel) return;
+
+  ambienceToggle.setAttribute("aria-pressed", String(isAudible));
+  ambienceToggle.setAttribute(
+    "aria-label",
+    isAudible ? "Mute jungle ambience" : "Play jungle ambience"
+  );
+  ambienceLabel.textContent = isAudible ? "Mute" : "Sound";
+}
+
+function playAmbience() {
+  if (!ambienceAudio) return;
+
+  ambienceAudio.volume = 1;
+  ambienceAudio.muted = false;
+
+  const playAttempt = ambienceAudio.play();
+  if (playAttempt) {
+    playAttempt
+      .then(() => setAmbienceButton(true))
+      .catch(() => setAmbienceButton(false));
+  }
+}
+
+function muteAmbience() {
+  if (!ambienceAudio) return;
+
+  ambienceAudio.muted = true;
+  setAmbienceButton(false);
+}
+
+if (ambienceAudio) {
+  setAmbienceButton(false);
+  window.addEventListener("load", playAmbience, { once: true });
+}
+
+ambienceToggle?.addEventListener("click", () => {
+  if (!ambienceAudio) return;
+
+  const shouldPlay = ambienceAudio.paused || ambienceAudio.muted;
+  if (shouldPlay) {
+    playAmbience();
+  } else {
+    muteAmbience();
+  }
+});
 
 function closeSiteNav() {
   if (!navToggle || !siteNav) return;
