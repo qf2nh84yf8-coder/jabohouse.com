@@ -7,6 +7,9 @@ const productFilmFullscreen = document.querySelector("[data-product-film-fullscr
 const ambienceAudio = document.querySelector("[data-ambience-audio]");
 const ambienceToggle = document.querySelector("[data-audio-toggle]");
 const ambienceLabel = document.querySelector("[data-audio-label]");
+const heroLogoAnimation = document.querySelector("[data-hero-logo-animation]");
+const heroLogoVideo = document.querySelector("[data-hero-logo-video]");
+const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 function setAmbienceButton(isAudible) {
   if (!ambienceToggle || !ambienceLabel) return;
@@ -55,6 +58,87 @@ ambienceToggle?.addEventListener("click", () => {
     muteAmbience();
   }
 });
+
+function showStillHeroLogo() {
+  if (!heroLogoAnimation || !heroLogoVideo) return;
+
+  heroLogoVideo.pause();
+  heroLogoAnimation.classList.remove("is-playing");
+  heroLogoAnimation.classList.add("is-complete");
+}
+
+function playHeroLogoAnimation() {
+  if (!heroLogoAnimation || !heroLogoVideo) return;
+
+  if (reducedMotionQuery.matches) {
+    heroLogoAnimation.classList.add("is-reduced");
+    showStillHeroLogo();
+    return;
+  }
+
+  heroLogoAnimation.classList.remove("is-complete", "is-reduced", "is-unavailable");
+  heroLogoAnimation.classList.add("is-playing");
+
+  try {
+    heroLogoVideo.currentTime = 0;
+  } catch (error) {
+    // Some browsers delay seeking until the video metadata is ready.
+  }
+
+  const playAttempt = heroLogoVideo.play();
+  if (playAttempt) {
+    playAttempt.catch(() => {
+      heroLogoAnimation.classList.remove("is-playing");
+      heroLogoAnimation.classList.add("is-unavailable");
+    });
+  }
+}
+
+if (heroLogoAnimation && heroLogoVideo) {
+  if (reducedMotionQuery.matches) {
+    heroLogoAnimation.classList.add("is-reduced");
+  } else {
+    heroLogoVideo.addEventListener("ended", showStillHeroLogo);
+    heroLogoVideo.addEventListener("error", () => {
+      heroLogoAnimation.classList.remove("is-playing");
+      heroLogoAnimation.classList.add("is-unavailable");
+    });
+
+    if (document.readyState === "complete") {
+      playHeroLogoAnimation();
+    } else {
+      window.addEventListener("load", playHeroLogoAnimation, { once: true });
+    }
+
+    let logoWasAwayFromTop = false;
+    let scrollTicking = false;
+
+    function watchHeroReturn() {
+      scrollTicking = false;
+      const isAtTop = window.scrollY < 72;
+
+      if (!isAtTop) {
+        logoWasAwayFromTop = true;
+        return;
+      }
+
+      if (logoWasAwayFromTop) {
+        logoWasAwayFromTop = false;
+        playHeroLogoAnimation();
+      }
+    }
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (scrollTicking) return;
+        scrollTicking = true;
+        window.requestAnimationFrame(watchHeroReturn);
+      },
+      { passive: true }
+    );
+  }
+}
 
 function closeSiteNav() {
   if (!navToggle || !siteNav) return;

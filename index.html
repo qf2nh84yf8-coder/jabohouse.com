@@ -57,14 +57,34 @@
         <div class="hero-copy">
           <div class="hero-brand-row">
             <h1 class="wordmark wordmark-hero" id="hero-title">Jabo<span>House</span></h1>
-            <img
-              class="hero-brand-crest"
-              src="assets/images/jabohouse-hero-crest-large.png"
-              alt=""
-              width="1644"
-              height="1440"
+            <span
+              class="hero-brand-crest hero-logo-animation"
+              data-hero-logo-animation
               aria-hidden="true"
-            />
+            >
+              <img
+                class="hero-logo-still"
+                src="assets/media/jh-emblem.png"
+                alt=""
+                width="1644"
+                height="1440"
+              />
+              <video
+                class="hero-logo-video"
+                data-hero-logo-video
+                muted
+                playsinline
+                preload="auto"
+                poster="assets/media/jh-emblem.png"
+                width="1644"
+                height="1440"
+              >
+                <source
+                  src="assets/media/jh-logo-living-header-transparent.webm"
+                  type="video/webm"
+                />
+              </video>
+            </span>
           </div>
           <p class="hero-line">
             Collections of exotic tropical trees in timeless ceramic vessels. Arranged by
@@ -116,8 +136,24 @@
         <div class="section-label">Only One Specimen Left in Stock</div>
         <div class="product-grid">
           <div class="product-summary">
-            <h2 id="product-title">Red Jaboticaba in Blue Ceramic</h2>
-            <p class="price">$5,000</p>
+            <div class="product-heading">
+              <div>
+                <h2 id="product-title">Red Jaboticaba in Blue Ceramic</h2>
+                <p class="price">$6,000</p>
+                <p class="price-note">
+                  10% of proceeds from each purchase will be donated to local Florida wildlife
+                  conservation efforts in your name with permission, or anonymously if preferred.
+                </p>
+              </div>
+              <img
+                class="product-icon"
+                src="assets/images/product-specimen-icon.jpg"
+                alt="Red Jaboticaba specimen in a blue ceramic vessel"
+                width="826"
+                height="1100"
+                loading="lazy"
+              />
+            </div>
             <p class="lede">
               Red Jaboticaba, also known as Red Hybrid Jaboticaba, is commonly associated with
               Plinia aureana and related hybrids. It is prized for fruiting sooner than many
@@ -126,8 +162,17 @@
               intriguing notes. White flowers appear from the bark and smell exquisite in
               springtime, or whenever the right conditions are met. A beautiful piece for collectors
               who want to add a conversation starter in their lanai, on the balcony, at the entrance
-              of an estate, or amongst other living art pieces.
+              of an estate, or amongst other living art pieces. Jaboticaba trees are bonsai-friendly
+              and can be shaped over time with the proper tools, pruning, wiring, and technique.
             </p>
+            <aside class="membership-note" aria-label="JaboHouse membership note">
+              <img src="assets/images/jabohouse-icon-large.svg" alt="" width="64" height="64" aria-hidden="true" />
+              <p>
+                Acquisition of this specimen grants eligibility for entry-level JaboHouse
+                membership. Upon initiation, a digital representation of the tree may be awarded to
+                your collector profile, with access to the private circle to follow when revealed.
+              </p>
+            </aside>
           </div>
 
           <dl class="spec-list" aria-label="Product specifications">
@@ -161,7 +206,7 @@
           <div class="product-film-frame">
             <iframe
               data-product-film-iframe
-              data-product-film-src="https://www.youtube.com/embed/RCmHugN2sMw?autoplay=1&enablejsapi=1&mute=1&playsinline=1&controls=1&rel=0&modestbranding=1&loop=1&playlist=RCmHugN2sMw&start=0&iv_load_policy=3"
+              data-product-film-src="https://www.youtube.com/embed/RCmHugN2sMw?autoplay=1&enablejsapi=1&origin=https%3A%2F%2Fjabohouse.com&mute=1&playsinline=1&controls=1&rel=0&modestbranding=1&loop=1&playlist=RCmHugN2sMw&start=0&iv_load_policy=3"
               title="Red Jaboticaba specimen video"
               src="about:blank"
               allow="autoplay; fullscreen; picture-in-picture"
@@ -199,35 +244,30 @@
               <span aria-hidden="true"></span>
             </button>
           </div>
-          <figcaption>
-            Silent specimen film. Tap the video to pause or resume; use the corner control for full
-            screen.
-          </figcaption>
         </figure>
 
       </section>
 
       <section class="acquisition section-pad rule-top" aria-labelledby="acquisition-title">
-        <div class="section-label">Acquisition</div>
-        <div class="two-column">
-          <h2 id="acquisition-title">Private reservation after approval.</h2>
-          <div class="copy-stack">
-            <p>
-              After inquiry approval, the buyer must make a 50% non-refundable deposit of
-              $2,500 to reserve the specimen.
-            </p>
-            <p>
-              The remaining $2,500 balance is due upon pickup or delivery. The private deposit
-              link is sent manually only after buyer approval and delivery confirmation.
-            </p>
-            <p>
-              Submitting an inquiry does not reserve the tree. The Red Jaboticaba is reserved
-              only after approval and receipt of the non-refundable deposit.
-            </p>
-            <p>
-              Each purchase includes a complimentary PDF Jaboticaba care guide, care instruction at
-              pickup or delivery, and rapid post-purchase support directly from Troy.
-            </p>
+        <div class="two-column care-guide-grid">
+          <figure class="care-guide-art">
+            <img
+              src="assets/images/jabohouse-care-guide.jpg"
+              alt="Printed JaboHouse Jaboticaba Care Guide trifold brochure"
+              width="1400"
+              height="1050"
+              loading="lazy"
+            />
+          </figure>
+          <div class="care-guide-copy">
+            <h2 id="acquisition-title">Printed Jaboticaba Care-Guide Included with Purchase.</h2>
+            <div class="copy-stack">
+              <p>
+                Each purchase includes a complimentary JaboHouse Care Guide trifold brochure,
+                personal care instructions from Troy at pickup or delivery, and post-purchase
+                customer support directly from Troy when needed for questions or concerns.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -235,7 +275,18 @@
       <section class="delivery section-pad rule-top" id="delivery" aria-labelledby="delivery-title">
         <div class="section-label">Delivery</div>
         <div class="two-column">
-          <h2 id="delivery-title">Pickup or confirmed regional delivery.</h2>
+          <div class="delivery-heading">
+            <h2 id="delivery-title">Free Delivery (within 105 miles) or Local Pickup.</h2>
+            <figure class="delivery-map">
+              <img
+                src="assets/images/jabohouse-delivery-map.jpg"
+                alt="Regional delivery map centered on Punta Gorda, Florida"
+                width="964"
+                height="1100"
+                loading="lazy"
+              />
+            </figure>
+          </div>
           <div class="copy-stack">
             <p>
               Free local pickup is available in Punta Gorda, Florida 33980. Local delivery is
@@ -280,41 +331,16 @@
         <div class="section-label">Inquiry</div>
         <div class="inquiry-grid">
           <div>
-            <h2 id="inquiry-title">Request reservation approval.</h2>
-            <p>
-              Share your delivery ZIP code and preference. JaboHouse will confirm availability,
-              delivery terms, and next steps by email.
-            </p>
+            <h2 id="inquiry-title">Fill out the form below.</h2>
           </div>
 
           <div class="zoho-form-frame">
             <iframe
               title="JaboHouse Reservation Inquiry form"
               src="https://forms.zohopublic.com/troyjabo1/form/JaboHouseReservationInquiry/formperma/K7ZS0NXx9_FtEvD3twOSA40qVuicIsYC6lds1uKbNpE"
-              loading="lazy"
             ></iframe>
           </div>
         </div>
-      </section>
-
-      <section class="legal section-pad rule-top" id="terms" aria-labelledby="terms-title">
-        <div class="section-label">Terms of Sale</div>
-        <h2 id="terms-title">Reservation terms</h2>
-        <p>
-          A 50% non-refundable deposit is required to reserve the Red Jaboticaba specimen after
-          inquiry approval. The deposit secures the specimen and removes it from public
-          availability. The remaining balance is due upon delivery or pickup. Delivery
-          availability, mileage, and final delivery fee, if applicable, are confirmed before a
-          private deposit link is issued. Submitting an inquiry does not reserve the specimen.
-          Purchase includes a complimentary PDF Jaboticaba care guide and educational care
-          instruction upon delivery or pickup.
-        </p>
-        <p>
-          All sales are final. No returns or refunds are offered after pickup or delivery, including
-          if the tree declines or dies after transfer. Buyers receive rapid customer support directly
-          from Troy, but ongoing care, placement, watering, weather exposure, and growing conditions
-          remain the buyer's responsibility.
-        </p>
       </section>
 
       <section class="legal section-pad rule-top" id="privacy" aria-labelledby="privacy-title">
@@ -351,7 +377,6 @@
         <a href="mailto:troy@JaboHouse.com">troy@JaboHouse.com</a>
       </address>
       <nav aria-label="Footer">
-        <a href="#terms">Terms of Sale</a>
         <a href="#privacy">Privacy</a>
       </nav>
       <p class="footer-legal">
