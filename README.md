@@ -6,8 +6,10 @@ This is a no-build static site suitable for Cloudflare Pages.
 
 - `index.html` - page structure, copy, product terms, and Zoho Forms inquiry embed
 - `styles.css` - colors, typography, spacing, and responsive layout
-- `script.js` - temporary email-draft inquiry behavior
-- `assets/images/` - launch photography placeholders
+- `script.js` - carousel, menu, sound toggle, video, and header logo animation behavior
+- `assets/images/` - site photography, product, founder, delivery, and care-guide images
+- `assets/media/` - transparent header logo animation and still logo fallback
+- `assets/audio/` - jungle ambience audio
 
 ## Editing
 
@@ -16,3 +18,7 @@ Update brand colors in `styles.css` under `:root`.
 Replace photos by keeping the same filenames in `assets/images/`, or update the matching `src` attributes in `index.html`.
 
 The inquiry section embeds the JaboHouse Reservation Inquiry form from Zoho Forms. Update the iframe URL in `index.html` if the Zoho form permalink changes.
+
+## Publishing
+
+Upload the contents of this folder to the root of the GitHub repository connected to Cloudflare Pages. After GitHub commits the files, Cloudflare Pages should redeploy the live website automatically.

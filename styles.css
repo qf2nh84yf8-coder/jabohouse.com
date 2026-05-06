@@ -264,6 +264,8 @@ p {
   aspect-ratio: 1644 / 1440;
   transform: scale(1.18);
   transform-origin: center;
+  overflow: visible;
+  background-color: transparent;
 }
 
 .hero-logo-still,
@@ -273,6 +275,7 @@ p {
   height: 100%;
   object-fit: contain;
   transition: opacity 180ms ease;
+  background-color: transparent;
 }
 
 .hero-logo-video {
