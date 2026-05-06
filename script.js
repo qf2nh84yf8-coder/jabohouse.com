@@ -10,6 +10,9 @@ const ambienceLabel = document.querySelector("[data-audio-label]");
 const heroLogoAnimation = document.querySelector("[data-hero-logo-animation]");
 const heroLogoVideo = document.querySelector("[data-hero-logo-video]");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+const AMBIENCE_VOLUME = 0.6;
+const ambienceUnlockEvents = ["pointerdown", "keydown", "touchstart"];
+let ambienceUserDisabled = false;
 
 function setAmbienceButton(isAudible) {
   if (!ambienceToggle || !ambienceLabel) return;
@@ -25,13 +28,16 @@ function setAmbienceButton(isAudible) {
 function playAmbience() {
   if (!ambienceAudio) return;
 
-  ambienceAudio.volume = 1;
+  ambienceAudio.volume = AMBIENCE_VOLUME;
   ambienceAudio.muted = false;
 
   const playAttempt = ambienceAudio.play();
   if (playAttempt) {
     playAttempt
-      .then(() => setAmbienceButton(true))
+      .then(() => {
+        removeAmbienceUnlockListeners();
+        setAmbienceButton(true);
+      })
       .catch(() => setAmbienceButton(false));
   }
 }
@@ -39,12 +45,36 @@ function playAmbience() {
 function muteAmbience() {
   if (!ambienceAudio) return;
 
+  ambienceUserDisabled = true;
   ambienceAudio.muted = true;
   setAmbienceButton(false);
 }
 
+function addAmbienceUnlockListeners() {
+  ambienceUnlockEvents.forEach((eventName) => {
+    window.addEventListener(eventName, unlockAmbienceOnInteraction, {
+      once: true,
+      passive: true,
+    });
+  });
+}
+
+function removeAmbienceUnlockListeners() {
+  ambienceUnlockEvents.forEach((eventName) => {
+    window.removeEventListener(eventName, unlockAmbienceOnInteraction);
+  });
+}
+
+function unlockAmbienceOnInteraction() {
+  if (ambienceUserDisabled) return;
+
+  playAmbience();
+}
+
 if (ambienceAudio) {
+  ambienceAudio.volume = AMBIENCE_VOLUME;
   setAmbienceButton(false);
+  addAmbienceUnlockListeners();
   window.addEventListener("load", playAmbience, { once: true });
 }
 
@@ -53,6 +83,7 @@ ambienceToggle?.addEventListener("click", () => {
 
   const shouldPlay = ambienceAudio.paused || ambienceAudio.muted;
   if (shouldPlay) {
+    ambienceUserDisabled = false;
     playAmbience();
   } else {
     muteAmbience();
@@ -67,6 +98,14 @@ function showStillHeroLogo() {
   heroLogoAnimation.classList.add("is-complete");
 }
 
+function revealHeroLogoVideo() {
+  if (!heroLogoAnimation || !heroLogoVideo) return;
+
+  window.requestAnimationFrame(() => {
+    heroLogoAnimation.classList.add("is-playing");
+  });
+}
+
 function playHeroLogoAnimation() {
   if (!heroLogoAnimation || !heroLogoVideo) return;
 
@@ -76,8 +115,7 @@ function playHeroLogoAnimation() {
     return;
   }
 
-  heroLogoAnimation.classList.remove("is-complete", "is-reduced", "is-unavailable");
-  heroLogoAnimation.classList.add("is-playing");
+  heroLogoAnimation.classList.remove("is-playing", "is-complete", "is-reduced", "is-unavailable");
 
   try {
     heroLogoVideo.currentTime = 0;
@@ -87,10 +125,12 @@ function playHeroLogoAnimation() {
 
   const playAttempt = heroLogoVideo.play();
   if (playAttempt) {
-    playAttempt.catch(() => {
+    playAttempt.then(revealHeroLogoVideo).catch(() => {
       heroLogoAnimation.classList.remove("is-playing");
       heroLogoAnimation.classList.add("is-unavailable");
     });
+  } else {
+    revealHeroLogoVideo();
   }
 }
 
