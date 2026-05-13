@@ -150,6 +150,51 @@ textarea {
   outline-offset: 3px;
 }
 
+.floating-audio-mute {
+  position: fixed;
+  right: clamp(1rem, 4vw, 2rem);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem);
+  z-index: 80;
+  display: inline-grid;
+  min-width: 3.35rem;
+  min-height: 3.35rem;
+  place-items: center;
+  border: 1px solid var(--ink);
+  background: rgba(247, 242, 233, 0.92);
+  box-shadow: 0 0.7rem 1.6rem rgba(24, 18, 15, 0.14);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  opacity: 0;
+  padding: 0.5rem;
+  pointer-events: none;
+  text-transform: uppercase;
+  transform: translateY(0.4rem);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    border-color 180ms ease;
+}
+
+.floating-audio-mute[hidden] {
+  display: none;
+}
+
+.floating-audio-mute.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.floating-audio-mute:hover,
+.floating-audio-mute:focus-visible {
+  border-color: var(--blue);
+  outline: 1px solid var(--blue);
+  outline-offset: 3px;
+}
+
 .nav-toggle {
   display: none;
   width: 4rem;

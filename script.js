@@ -7,6 +7,7 @@ const productFilmFullscreen = document.querySelector("[data-product-film-fullscr
 const ambienceAudio = document.querySelector("[data-ambience-audio]");
 const ambienceToggle = document.querySelector("[data-audio-toggle]");
 const ambienceLabel = document.querySelector("[data-audio-label]");
+const floatingAmbienceToggle = document.querySelector("[data-floating-audio-toggle]");
 const heroLogoAnimation = document.querySelector("[data-hero-logo-animation]");
 const heroLogoVideo = document.querySelector("[data-hero-logo-video]");
 const heroLogoIos = document.querySelector("[data-hero-logo-ios]");
@@ -27,6 +28,13 @@ let heroLogoIosCompleteTimer;
 let heroLogoIosFrameTimer;
 let heroLogoIosPreloadedFrames = [];
 
+function setFloatingAmbienceButton(isAudible) {
+  if (!floatingAmbienceToggle) return;
+
+  floatingAmbienceToggle.hidden = !isAudible;
+  floatingAmbienceToggle.classList.toggle("is-visible", isAudible);
+}
+
 function setAmbienceButton(isAudible) {
   if (!ambienceToggle || !ambienceLabel) return;
 
@@ -36,6 +44,7 @@ function setAmbienceButton(isAudible) {
     isAudible ? "Mute jungle ambience" : "Play jungle ambience"
   );
   ambienceLabel.textContent = isAudible ? "Mute" : "Sound";
+  setFloatingAmbienceButton(isAudible);
 }
 
 function playAmbience() {
@@ -102,6 +111,8 @@ ambienceToggle?.addEventListener("click", () => {
     muteAmbience();
   }
 });
+
+floatingAmbienceToggle?.addEventListener("click", muteAmbience);
 
 function showStillHeroLogo() {
   if (!heroLogoAnimation) return;
