@@ -9,10 +9,18 @@ const ambienceToggle = document.querySelector("[data-audio-toggle]");
 const ambienceLabel = document.querySelector("[data-audio-label]");
 const heroLogoAnimation = document.querySelector("[data-hero-logo-animation]");
 const heroLogoVideo = document.querySelector("[data-hero-logo-video]");
+const heroLogoIos = document.querySelector("[data-hero-logo-ios]");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-const AMBIENCE_VOLUME = 0.6;
+const AMBIENCE_VOLUME = 0.3;
+const HERO_LOGO_ANIMATION_MS = 4100;
+const IOS_LOGO_PLACEHOLDER =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 const ambienceUnlockEvents = ["pointerdown", "keydown", "touchstart"];
+const isIOSDevice =
+  /iPad|iPhone|iPod/.test(window.navigator.userAgent) ||
+  (window.navigator.platform === "MacIntel" && window.navigator.maxTouchPoints > 1);
 let ambienceUserDisabled = false;
+let heroLogoIosCompleteTimer;
 
 function setAmbienceButton(isAudible) {
   if (!ambienceToggle || !ambienceLabel) return;
@@ -91,9 +99,10 @@ ambienceToggle?.addEventListener("click", () => {
 });
 
 function showStillHeroLogo() {
-  if (!heroLogoAnimation || !heroLogoVideo) return;
+  if (!heroLogoAnimation) return;
 
-  heroLogoVideo.pause();
+  window.clearTimeout(heroLogoIosCompleteTimer);
+  heroLogoVideo?.pause();
   heroLogoAnimation.classList.remove("is-playing");
   heroLogoAnimation.classList.add("is-complete");
 }
@@ -106,14 +115,36 @@ function revealHeroLogoVideo() {
   });
 }
 
+function playIosHeroLogoAnimation() {
+  const iosLogoSrc = heroLogoIos?.getAttribute("data-hero-logo-ios-src");
+  if (!heroLogoAnimation || !heroLogoIos || !iosLogoSrc) return false;
+
+  heroLogoVideo?.pause();
+  window.clearTimeout(heroLogoIosCompleteTimer);
+  heroLogoAnimation.classList.add("is-ios");
+  heroLogoAnimation.classList.remove("is-playing", "is-complete", "is-reduced", "is-unavailable");
+  heroLogoIos.src = IOS_LOGO_PLACEHOLDER;
+
+  window.requestAnimationFrame(() => {
+    heroLogoIos.src = iosLogoSrc;
+    heroLogoAnimation.classList.add("is-playing");
+    heroLogoIosCompleteTimer = window.setTimeout(showStillHeroLogo, HERO_LOGO_ANIMATION_MS);
+  });
+
+  return true;
+}
+
 function playHeroLogoAnimation() {
-  if (!heroLogoAnimation || !heroLogoVideo) return;
+  if (!heroLogoAnimation) return;
 
   if (reducedMotionQuery.matches) {
     heroLogoAnimation.classList.add("is-reduced");
     showStillHeroLogo();
     return;
   }
+
+  if (isIOSDevice && playIosHeroLogoAnimation()) return;
+  if (!heroLogoVideo) return;
 
   heroLogoAnimation.classList.remove("is-playing", "is-complete", "is-reduced", "is-unavailable");
 
@@ -134,15 +165,19 @@ function playHeroLogoAnimation() {
   }
 }
 
-if (heroLogoAnimation && heroLogoVideo) {
+if (heroLogoAnimation && (heroLogoVideo || heroLogoIos)) {
   if (reducedMotionQuery.matches) {
     heroLogoAnimation.classList.add("is-reduced");
   } else {
-    heroLogoVideo.addEventListener("ended", showStillHeroLogo);
-    heroLogoVideo.addEventListener("error", () => {
-      heroLogoAnimation.classList.remove("is-playing");
-      heroLogoAnimation.classList.add("is-unavailable");
-    });
+    if (isIOSDevice) {
+      heroLogoAnimation.classList.add("is-ios");
+    } else if (heroLogoVideo) {
+      heroLogoVideo.addEventListener("ended", showStillHeroLogo);
+      heroLogoVideo.addEventListener("error", () => {
+        heroLogoAnimation.classList.remove("is-playing");
+        heroLogoAnimation.classList.add("is-unavailable");
+      });
+    }
 
     if (document.readyState === "complete") {
       playHeroLogoAnimation();
@@ -275,8 +310,8 @@ function updateCarousel(index, options = {}) {
       image.setAttribute("aria-hidden", slot === activeCarouselSlot ? "false" : "true");
     });
     activeCarouselIndex = nextIndex;
-    carouselCaption.textContent = nextImage.caption;
-    carouselCount.textContent = `${nextIndex + 1} / ${carouselImages.length}`;
+    if (carouselCaption) carouselCaption.textContent = nextImage.caption;
+    if (carouselCount) carouselCount.textContent = `${nextIndex + 1} / ${carouselImages.length}`;
     return;
   }
 
@@ -295,8 +330,8 @@ function updateCarousel(index, options = {}) {
 
   activeCarouselSlot = nextSlot;
   activeCarouselIndex = nextIndex;
-  carouselCaption.textContent = nextImage.caption;
-  carouselCount.textContent = `${nextIndex + 1} / ${carouselImages.length}`;
+  if (carouselCaption) carouselCaption.textContent = nextImage.caption;
+  if (carouselCount) carouselCount.textContent = `${nextIndex + 1} / ${carouselImages.length}`;
 }
 
 function updateLightbox() {
