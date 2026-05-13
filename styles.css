@@ -18,11 +18,20 @@
 }
 
 html {
+  max-width: 100%;
+  overflow-x: hidden;
   scroll-behavior: smooth;
+  scroll-padding-top: 1.25rem;
 }
 
 body {
+  width: 100%;
+  max-width: 100%;
   margin: 0;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y pinch-zoom;
   background: var(--ivory);
   color: var(--ink);
   font-family: var(--sans);
@@ -33,10 +42,27 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+@supports (overflow: clip) {
+  html,
+  body,
+  main {
+    overflow-x: clip;
+  }
+}
+
 img {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+main,
+section,
+header,
+footer,
+figure,
+div {
+  min-width: 0;
 }
 
 a {
@@ -890,6 +916,17 @@ body.lightbox-open {
 }
 
 @media (max-width: 679px) {
+  html {
+    scroll-padding-top: 0.75rem;
+  }
+
+  main,
+  .site-header,
+  .site-footer {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   .site-header {
     flex-direction: column;
     align-items: stretch;
@@ -933,6 +970,53 @@ body.lightbox-open {
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--soft-rule);
+  }
+
+  .section-pad {
+    padding-inline: clamp(1rem, 4.8vw, 1.35rem);
+    scroll-margin-top: 0.75rem;
+  }
+
+  .hero {
+    gap: 2rem;
+  }
+
+  .hero-brand-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(6.25rem, 27vw, 10rem);
+    gap: clamp(0.35rem, 2vw, 0.75rem);
+    max-width: 100%;
+  }
+
+  .hero-brand-row .wordmark-hero {
+    transform: none;
+  }
+
+  .wordmark-hero {
+    font-size: clamp(2.2rem, 10vw, 4rem);
+  }
+
+  .hero-brand-crest {
+    flex-basis: auto;
+    width: 100%;
+    max-width: none;
+    justify-self: end;
+    overflow: hidden;
+    transform: none;
+  }
+
+  .hero-line {
+    max-width: 100%;
+  }
+
+  .hero-figure,
+  .carousel-stage,
+  .product-grid,
+  .two-column,
+  .inquiry-grid,
+  .founder,
+  .zoho-form-frame {
+    max-width: 100%;
   }
 }
 
