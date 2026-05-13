@@ -13,14 +13,19 @@ const heroLogoIos = document.querySelector("[data-hero-logo-ios]");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 const AMBIENCE_VOLUME = 0.3;
 const HERO_LOGO_ANIMATION_MS = 4100;
+const IOS_LOGO_FRAME_DURATION_MS = 125;
 const IOS_LOGO_PLACEHOLDER =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 const ambienceUnlockEvents = ["pointerdown", "keydown", "touchstart"];
+const forceIosLogoPreview = new URLSearchParams(window.location.search).has("ios-logo-preview");
 const isIOSDevice =
+  forceIosLogoPreview ||
   /iPad|iPhone|iPod/.test(window.navigator.userAgent) ||
   (window.navigator.platform === "MacIntel" && window.navigator.maxTouchPoints > 1);
 let ambienceUserDisabled = false;
 let heroLogoIosCompleteTimer;
+let heroLogoIosFrameTimer;
+let heroLogoIosPreloadedFrames = [];
 
 function setAmbienceButton(isAudible) {
   if (!ambienceToggle || !ambienceLabel) return;
@@ -102,6 +107,7 @@ function showStillHeroLogo() {
   if (!heroLogoAnimation) return;
 
   window.clearTimeout(heroLogoIosCompleteTimer);
+  window.clearTimeout(heroLogoIosFrameTimer);
   heroLogoVideo?.pause();
   heroLogoAnimation.classList.remove("is-playing");
   heroLogoAnimation.classList.add("is-complete");
@@ -115,20 +121,59 @@ function revealHeroLogoVideo() {
   });
 }
 
+function getIosHeroLogoFrameCount() {
+  return Number.parseInt(heroLogoIos?.dataset.heroLogoIosFrameCount || "0", 10);
+}
+
+function getIosHeroLogoFrameUrl(frameIndex) {
+  const template = heroLogoIos?.dataset.heroLogoIosFrameTemplate;
+  if (!template) return "";
+
+  return template.replace("{frame}", String(frameIndex + 1).padStart(3, "0"));
+}
+
+function preloadIosHeroLogoFrames() {
+  const frameCount = getIosHeroLogoFrameCount();
+  if (!frameCount || heroLogoIosPreloadedFrames.length === frameCount) return;
+
+  heroLogoIosPreloadedFrames = Array.from({ length: frameCount }, (_, frameIndex) => {
+    const frame = new Image();
+    frame.decoding = "async";
+    frame.src = getIosHeroLogoFrameUrl(frameIndex);
+    return frame;
+  });
+}
+
 function playIosHeroLogoAnimation() {
-  const iosLogoSrc = heroLogoIos?.getAttribute("data-hero-logo-ios-src");
-  if (!heroLogoAnimation || !heroLogoIos || !iosLogoSrc) return false;
+  const frameCount = getIosHeroLogoFrameCount();
+  if (!heroLogoAnimation || !heroLogoIos || !frameCount || !getIosHeroLogoFrameUrl(0)) return false;
 
   heroLogoVideo?.pause();
   window.clearTimeout(heroLogoIosCompleteTimer);
+  window.clearTimeout(heroLogoIosFrameTimer);
   heroLogoAnimation.classList.add("is-ios");
   heroLogoAnimation.classList.remove("is-playing", "is-complete", "is-reduced", "is-unavailable");
   heroLogoIos.src = IOS_LOGO_PLACEHOLDER;
+  preloadIosHeroLogoFrames();
+
+  let frameIndex = 0;
 
   window.requestAnimationFrame(() => {
-    heroLogoIos.src = iosLogoSrc;
     heroLogoAnimation.classList.add("is-playing");
-    heroLogoIosCompleteTimer = window.setTimeout(showStillHeroLogo, HERO_LOGO_ANIMATION_MS);
+
+    function showNextFrame() {
+      if (frameIndex >= frameCount) {
+        showStillHeroLogo();
+        return;
+      }
+
+      heroLogoIos.src = getIosHeroLogoFrameUrl(frameIndex);
+      frameIndex += 1;
+      heroLogoIosFrameTimer = window.setTimeout(showNextFrame, IOS_LOGO_FRAME_DURATION_MS);
+    }
+
+    showNextFrame();
+    heroLogoIosCompleteTimer = window.setTimeout(showStillHeroLogo, HERO_LOGO_ANIMATION_MS + 250);
   });
 
   return true;

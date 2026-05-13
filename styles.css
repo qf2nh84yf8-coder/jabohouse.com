@@ -273,8 +273,8 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: clamp(0.45rem, 2vw, 1.5rem);
-  max-width: min(100%, 48rem);
+  gap: clamp(0.55rem, 2.4vw, 1.75rem);
+  max-width: min(100%, 58rem);
 }
 
 .hero-brand-row .wordmark-hero {
@@ -284,11 +284,11 @@ p {
 .hero-brand-crest {
   position: relative;
   display: block;
-  flex: 0 0 clamp(9.8rem, 41vw, 24rem);
-  width: clamp(9.8rem, 41vw, 24rem);
-  max-width: 48%;
+  flex: 0 0 clamp(14rem, 43vw, 26rem);
+  width: clamp(14rem, 43vw, 26rem);
+  max-width: 52%;
   aspect-ratio: 1644 / 1440;
-  transform: scale(1.18);
+  transform: scale(1.08);
   transform-origin: center;
   overflow: visible;
   background-color: transparent;
@@ -983,8 +983,8 @@ body.lightbox-open {
 
   .hero-brand-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(6.25rem, 27vw, 10rem);
-    gap: clamp(0.35rem, 2vw, 0.75rem);
+    grid-template-columns: minmax(0, 1fr) clamp(10.5rem, 48vw, 19rem);
+    gap: clamp(0.35rem, 1.8vw, 0.65rem);
     max-width: 100%;
   }
 
@@ -993,7 +993,7 @@ body.lightbox-open {
   }
 
   .wordmark-hero {
-    font-size: clamp(2.2rem, 10vw, 4rem);
+    font-size: clamp(2rem, 8vw, 3rem);
   }
 
   .hero-brand-crest {
@@ -1017,6 +1017,16 @@ body.lightbox-open {
   .founder,
   .zoho-form-frame {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-brand-row {
+    grid-template-columns: minmax(0, 1fr) clamp(9.75rem, 45vw, 11.5rem);
+  }
+
+  .wordmark-hero {
+    font-size: clamp(1.82rem, 7.2vw, 2.05rem);
   }
 }
 
@@ -1072,20 +1082,20 @@ body.lightbox-open {
 
   .hero-brand-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(14rem, 21vw, 18rem);
+    grid-template-columns: minmax(0, 1fr) clamp(16rem, 24vw, 24rem);
     align-items: center;
-    gap: clamp(2rem, 4vw, 3rem);
+    gap: clamp(1.75rem, 3vw, 2.75rem);
     max-width: 100%;
   }
 
   .wordmark-hero {
-    font-size: clamp(5.2rem, 8vw, 7.6rem);
+    font-size: clamp(5rem, 7vw, 7rem);
   }
 
   .hero-brand-crest {
     flex-basis: auto;
     justify-self: end;
-    width: clamp(14rem, 21vw, 18rem);
+    width: clamp(16rem, 24vw, 24rem);
     max-width: none;
     transform: none;
   }
