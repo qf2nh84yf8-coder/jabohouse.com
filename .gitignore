@@ -1,0 +1,9 @@
+node_modules/
+.wrangler/
+
+# Cloudflare and local development secrets
+.dev.vars
+.dev.vars.*
+.env
+.env.*
+!.env.example

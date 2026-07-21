@@ -11,6 +11,11 @@ const floatingAmbienceToggle = document.querySelector("[data-floating-audio-togg
 const heroLogoAnimation = document.querySelector("[data-hero-logo-animation]");
 const heroLogoVideo = document.querySelector("[data-hero-logo-video]");
 const heroLogoIos = document.querySelector("[data-hero-logo-ios]");
+const inquiryForm = document.querySelector("[data-inquiry-form]");
+const inquirySubmit = document.querySelector("[data-inquiry-submit]");
+const inquiryStatus = document.querySelector("[data-inquiry-status]");
+const inquiryStartedAt = document.querySelector("[data-inquiry-started-at]");
+const inquiryTurnstile = document.querySelector("[data-inquiry-turnstile]");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 const AMBIENCE_VOLUME = 0.3;
 const HERO_LOGO_ANIMATION_MS = 4100;
@@ -27,6 +32,118 @@ let ambienceUserDisabled = false;
 let heroLogoIosCompleteTimer;
 let heroLogoIosFrameTimer;
 let heroLogoIosPreloadedFrames = [];
+let inquiryTurnstileWidgetId;
+
+function setInquiryStartedAt() {
+  if (inquiryStartedAt) inquiryStartedAt.value = String(Date.now());
+}
+
+function setInquiryStatus(message, state = "") {
+  if (!inquiryStatus) return;
+
+  inquiryStatus.textContent = message;
+  if (state) {
+    inquiryStatus.dataset.state = state;
+  } else {
+    delete inquiryStatus.dataset.state;
+  }
+}
+
+function loadTurnstileScript() {
+  if (window.turnstile) return Promise.resolve();
+
+  return new Promise((resolve, reject) => {
+    const existingScript = document.querySelector('script[data-jabohouse-turnstile]');
+    if (existingScript) {
+      existingScript.addEventListener("load", resolve, { once: true });
+      existingScript.addEventListener("error", reject, { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    script.defer = true;
+    script.dataset.jabohouseTurnstile = "true";
+    script.addEventListener("load", resolve, { once: true });
+    script.addEventListener("error", reject, { once: true });
+    document.head.append(script);
+  });
+}
+
+async function initializeInquiryProtection() {
+  if (!inquiryForm || !inquiryTurnstile) return;
+
+  try {
+    const response = await fetch("/api/inquiry", {
+      headers: { Accept: "application/json" },
+    });
+    if (!response.ok) return;
+
+    const config = await response.json();
+    if (!config.turnstileSiteKey) return;
+
+    await loadTurnstileScript();
+    inquiryTurnstile.hidden = false;
+    inquiryTurnstileWidgetId = window.turnstile.render(inquiryTurnstile, {
+      sitekey: config.turnstileSiteKey,
+      action: "jabohouse-inquiry",
+      appearance: "interaction-only",
+      size: "flexible",
+      theme: "light",
+    });
+  } catch {
+    // The server-side honeypot remains active if Turnstile is unavailable.
+  }
+}
+
+async function submitInquiry(event) {
+  event.preventDefault();
+  if (!inquiryForm || !inquirySubmit) return;
+
+  if (!inquiryForm.reportValidity()) return;
+
+  inquirySubmit.disabled = true;
+  inquirySubmit.textContent = "Sending…";
+  setInquiryStatus("Sending your inquiry…");
+
+  try {
+    const response = await fetch(inquiryForm.action, {
+      method: "POST",
+      headers: { Accept: "application/json" },
+      body: new FormData(inquiryForm),
+    });
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Your inquiry could not be sent.");
+    }
+
+    inquiryForm.reset();
+    setInquiryStartedAt();
+    if (window.turnstile && inquiryTurnstileWidgetId !== undefined) {
+      window.turnstile.reset(inquiryTurnstileWidgetId);
+    }
+    setInquiryStatus(
+      "Thank you. Your inquiry has been sent to Troy, who will respond personally.",
+      "success"
+    );
+  } catch (error) {
+    setInquiryStatus(
+      error.message || "Your inquiry could not be sent. Please email troy@JaboHouse.com.",
+      "error"
+    );
+  } finally {
+    inquirySubmit.disabled = false;
+    inquirySubmit.textContent = "Send inquiry";
+  }
+}
+
+if (inquiryForm) {
+  setInquiryStartedAt();
+  initializeInquiryProtection();
+  inquiryForm.addEventListener("submit", submitInquiry);
+}
 
 function setFloatingAmbienceButton(isAudible) {
   if (!floatingAmbienceToggle) return;
