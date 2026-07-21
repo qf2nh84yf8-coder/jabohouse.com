@@ -10,7 +10,7 @@
     <title>JaboHouse | Red Jaboticaba in Blue Ceramic</title>
     <link rel="icon" href="assets/images/jabohouse-icon-large.svg" type="image/svg+xml" />
     <link rel="preload" href="assets/images/carousel-04.jpg" as="image" />
-    <link rel="stylesheet" href="styles.css?v=2026-05-13-floating-audio-v1" />
+    <link rel="stylesheet" href="styles.css?v=2026-07-21-native-inquiry-v1" />
   </head>
   <body>
     <a class="skip-link" href="#product">Skip to product</a>
@@ -350,16 +350,136 @@
       <section class="inquiry section-pad rule-top" id="inquiry" aria-labelledby="inquiry-title">
         <div class="section-label">Inquiry</div>
         <div class="inquiry-grid">
-          <div>
-            <h2 id="inquiry-title">Fill out the form below.</h2>
+          <div class="inquiry-intro">
+            <h2 id="inquiry-title">Reserve this living piece.</h2>
+            <p>
+              Share your pickup or delivery preference and Troy will respond personally to confirm
+              availability, mileage, and next steps.
+            </p>
+            <p class="inquiry-response-note">No payment is collected through this form.</p>
           </div>
 
-          <div class="zoho-form-frame">
-            <iframe
-              title="JaboHouse Reservation Inquiry form"
-              src="https://forms.zohopublic.com/troyjabo1/form/JaboHouseReservationInquiry/formperma/K7ZS0NXx9_FtEvD3twOSA40qVuicIsYC6lds1uKbNpE"
-            ></iframe>
-          </div>
+          <form
+            class="inquiry-form"
+            action="/api/inquiry"
+            method="post"
+            data-inquiry-form
+          >
+            <p class="required-note"><span aria-hidden="true">*</span> Required information</p>
+
+            <div class="inquiry-name-row">
+              <div class="inquiry-field">
+                <label for="inquiry-first-name">First name <span aria-hidden="true">*</span></label>
+                <input
+                  id="inquiry-first-name"
+                  name="firstName"
+                  type="text"
+                  autocomplete="given-name"
+                  maxlength="80"
+                  required
+                />
+              </div>
+
+              <div class="inquiry-field">
+                <label for="inquiry-last-name">Last name <span aria-hidden="true">*</span></label>
+                <input
+                  id="inquiry-last-name"
+                  name="lastName"
+                  type="text"
+                  autocomplete="family-name"
+                  maxlength="80"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="inquiry-field">
+              <label for="inquiry-email">Email <span aria-hidden="true">*</span></label>
+              <input
+                id="inquiry-email"
+                name="email"
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+                maxlength="254"
+                required
+              />
+            </div>
+
+            <div class="inquiry-field">
+              <label for="inquiry-phone">Phone <span class="optional-label">Optional</span></label>
+              <input
+                id="inquiry-phone"
+                name="phone"
+                type="tel"
+                inputmode="tel"
+                autocomplete="tel"
+                maxlength="40"
+              />
+            </div>
+
+            <div class="inquiry-detail-row">
+              <div class="inquiry-field">
+                <label for="inquiry-zip">Delivery ZIP code <span aria-hidden="true">*</span></label>
+                <input
+                  id="inquiry-zip"
+                  name="zip"
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="postal-code"
+                  pattern="[0-9]{5}(-[0-9]{4})?"
+                  maxlength="10"
+                  required
+                />
+              </div>
+
+              <div class="inquiry-field">
+                <label for="inquiry-preference">Pickup or delivery <span aria-hidden="true">*</span></label>
+                <select id="inquiry-preference" name="preference" required>
+                  <option value="">Select one</option>
+                  <option value="Pickup">Pickup</option>
+                  <option value="Delivery">Delivery</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="inquiry-field">
+              <label for="inquiry-message">Message <span class="optional-label">Optional</span></label>
+              <textarea
+                id="inquiry-message"
+                name="message"
+                rows="6"
+                maxlength="3000"
+                placeholder="Questions, timing, or delivery details"
+              ></textarea>
+            </div>
+
+            <div class="inquiry-trap" aria-hidden="true" hidden>
+              <label for="inquiry-website">Leave this field blank</label>
+              <input
+                id="inquiry-website"
+                name="website"
+                type="text"
+                tabindex="-1"
+                autocomplete="off"
+              />
+            </div>
+            <input type="hidden" name="startedAt" value="" data-inquiry-started-at />
+
+            <div class="inquiry-turnstile" data-inquiry-turnstile hidden></div>
+
+            <div class="inquiry-actions">
+              <button class="inquiry-submit" type="submit" data-inquiry-submit>
+                Send inquiry
+              </button>
+              <p class="inquiry-form-status" data-inquiry-status role="status" aria-live="polite"></p>
+            </div>
+
+            <p class="inquiry-privacy-note">
+              Your information is used only to respond to this inquiry and coordinate a possible
+              purchase. It is never sold or publicly shared.
+            </p>
+          </form>
         </div>
       </section>
 
