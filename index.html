@@ -348,13 +348,20 @@
 
       <section class="founder section-pad rule-top" aria-labelledby="founder-title">
         <figure class="founder-art">
-          <img
-            src="assets/images/founder-troy-chiappone.jpg"
-            alt="Troy Chiappone, founder of JaboHouse"
-            width="768"
-            height="1024"
-            loading="lazy"
-          />
+          <picture>
+            <source
+              srcset="assets/images/founder-troy-chiappone.avif?v=2026-07-21-portrait-v3"
+              type="image/avif"
+            />
+            <img
+              src="assets/images/founder-troy-chiappone.jpg?v=2026-07-21-portrait-v3"
+              alt="Troy Chiappone, founder of JaboHouse"
+              width="960"
+              height="1280"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
         </figure>
         <div class="founder-copy">
           <p class="eyebrow">Founder</p>
