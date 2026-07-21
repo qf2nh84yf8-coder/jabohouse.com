@@ -450,6 +450,16 @@ const carouselImages = [
     alt: "Jaboticaba fruit clustered on the trunk in warm light",
     caption: "Fruit clustered directly on the trunk in afternoon light.",
   },
+  {
+    src: "assets/images/carousel-09.png",
+    alt: "White Jaboticaba blossoms flowering directly from the trunk",
+    caption: "Fresh white blossoms flowering directly from the Red Jaboticaba trunk.",
+  },
+  {
+    src: "assets/images/carousel-10.png",
+    alt: "Jaboticaba branches with white blossoms and early fruit set",
+    caption: "New blossoms and early fruit set along the Red Jaboticaba branches.",
+  },
 ];
 
 const carousel = document.querySelector("[data-carousel]");
